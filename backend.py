@@ -1,7 +1,9 @@
 from math import sqrt, fabs
 
+import pandas as pd
 
-def getFileData(filename):
+
+def get_file_data(filename):
     result = []
 
     with open(filename, 'r') as openReadFile:
@@ -14,6 +16,14 @@ def getFileData(filename):
             print(result)
 
             return result
+
+
+def get_excel_table1(filename):
+    return pd.read_excel(filename, names=['n', '1p', '5p', '99p', '95p'], skiprows=1)
+
+
+def get_excel_table2(filename):
+    return pd.read_excel(filename, names=['n', 'm', '1p', '2p', '5p'], skiprows=1)
 
 
 def avg_data(mas):
@@ -51,13 +61,22 @@ if __name__ == '__main__':
     # FILENAME = input()
     FILENAME = 'G_v22_a.txt'
 
-    fileData = getFileData(FILENAME)
+    fileData = get_file_data(FILENAME)
 
     # Среднее значение по выборке
     avg_curr = avg_data(fileData)
+    print('Среднее значение по выборке: %s' % avg_curr)
 
     # Смещенное среднее квадратическое отклонение
     deviation_curr = deviation_offset(fileData, avg_curr)
+    print('Смещенное среднее квадратическое отклонение: %s' % deviation_curr)
 
     # Отношение квантиля d~
     quantile_curr = quantile(fileData, deviation_curr, avg_curr)
+    print('Отношение квантиля d~: %s' % quantile_curr)
+
+    k = get_excel_table2('Table_B_2.xlsx')
+    print(k)
+
+    k2 = get_excel_table1('Table_B_1.xlsx')
+    print(k2)

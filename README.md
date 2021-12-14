@@ -2,7 +2,8 @@
 This is the repository for homework in metrology at the Higher School of Economics.
 
 <img src="https://render.githubusercontent.com/render/math?math=\Delta = K * S_\Sigma">
-<img src="https://render.githubusercontent.com/render/math?math=S_\Sigma = \sqrt {S_\Theta^2\+S_\tilde X^2}">
+<img src="https://render.githubusercontent.com/render/math?math=S_\Sigma = \sqrt {S_\Theta^2 %2B S_\tilde X^2}">
+<img src="https://render.githubusercontent.com/render/math?math=K = \frac {\varepsilon %2B \Theta_\Sigma(P)}{S_\tilde X %2b S_\Theta}">
 
 # Developers
 - [Ilya Mikhailov](https://github.com/IR14)

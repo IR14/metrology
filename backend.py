@@ -31,6 +31,10 @@ def get_excel_gibs(filename):
     return pd.read_excel(filename, names=['n', '1p', '5p'], skiprows=1)
 
 
+def get_excel_student(filename):
+    return pd.read_excel(filename, names=['n', '95p', '99p'], skiprows=1)
+
+
 def avg_data(mas):
     s = 0
     for i in range(0, len(mas)):
@@ -40,14 +44,21 @@ def avg_data(mas):
     return avg
 
 
-def deviation_offset(mas, avg):
-    n = len(mas)
+def mean_square_deviation(mas, avg, n):
+    """
+    n-1 - common
+    n - star option
+    """
 
     temp = 0
     for i in mas:
         temp += (i - avg) ** 2
 
     return sqrt(temp / n)
+
+
+def mean_square_deviation_avg(n, deviation):
+    return deviation / sqrt(n)
 
 
 def quantile(mas, deviation, avg):
@@ -72,12 +83,66 @@ def gross_exclusion(mas, avg, deviation, gt):
             mas.remove(min(mas))
 
         avg = avg_data(mas)
-        deviation = deviation_offset(mas, avg)
+        deviation = mean_square_deviation(mas, avg, n=len(mas))
 
         g1 = fabs(max(mas) - avg) / deviation
         g2 = abs(avg - min(mas)) / deviation
 
     return mas
+
+
+def nonexclusive_system_error(mas_len, confidence_probability, mean_square_deviation_avg):
+    n = int(input("Enter count of errors: "))
+    errors = []
+    k = None
+    # q1, q2 = None, None
+
+    for i in range(n):
+        print("Enter error n.", i + 1)
+        errors.append(float(input()))
+
+    n = len(errors)
+    errors_sum = sum(map(fabs, errors))
+
+    if confidence_probability == 0.95:
+        k = 1.1
+    else:
+        k = 1.4
+        # if n > 4:
+        #     k = 1.4
+        # else:
+        #     q1 = errors[0]
+        #     q2 = errors[1]
+        #
+        #     for i in range(2, n):
+        #         if errors[i]
+
+    errors_with_confidence_probability = k * sqrt(sum(list(map(lambda x: x ** 2, errors))))
+
+    mean_square_deviation_of_nonexclusive_system_error = errors_with_confidence_probability / sqrt(3) / k
+
+    mean_square_deviation_sigma = sqrt(
+        sum(list(map((lambda x: x ** 2, [mean_square_deviation_of_nonexclusive_system_error,
+                                         mean_square_deviation_avg])))))
+
+    student_ratio = get_excel_student('Table_D_1.xlsx')
+
+    curr_student_ratio = interp(mas_len - 1,
+                                student_ratio['n'].values,
+                                student_ratio[confidence_probability].values)
+
+    confidence_border = curr_student_ratio * mean_square_deviation_avg
+
+    k_ratio = (confidence_border + errors_sum) / (
+            mean_square_deviation_avg + mean_square_deviation_of_nonexclusive_system_error)
+
+    delta = k_ratio * mean_square_deviation_sigma
+
+    return delta
+
+
+def get_k():
+    pass
 
 
 if __name__ == '__main__':
@@ -91,7 +156,7 @@ if __name__ == '__main__':
     print('Среднее значение по выборке: %s' % avg_curr)
 
     # Смещенное среднее квадратическое отклонение
-    deviation_curr = deviation_offset(fileData, avg_curr)
+    deviation_curr = mean_square_deviation(fileData, avg_curr, len(fileData))
     print('Смещенное среднее квадратическое отклонение: %s' % deviation_curr)
 
     # Отношение квантиля d~

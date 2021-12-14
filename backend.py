@@ -1,7 +1,7 @@
 from math import sqrt, fabs
 
 import pandas as pd
-
+import tkinter.ttk as ttk
 
 def get_file_data(filename):
     result = []

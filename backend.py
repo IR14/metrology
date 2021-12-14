@@ -1,7 +1,12 @@
 from math import sqrt, fabs
 
 import pandas as pd
+<<<<<<< HEAD
 import tkinter.ttk as ttk
+=======
+from numpy import interp
+
+>>>>>>> fa54f70b6c9b96c170861d377d00b32fbf0f623c
 
 def get_file_data(filename):
     result = []
@@ -26,13 +31,15 @@ def get_excel_table2(filename):
     return pd.read_excel(filename, names=['n', 'm', '1p', '2p', '5p'], skiprows=1)
 
 
+def get_excel_gibs(filename):
+    return pd.read_excel(filename, names=['n', '1p', '5p'], skiprows=1)
+
+
 def avg_data(mas):
     s = 0
     for i in range(0, len(mas)):
         s += mas[i];
     avg = s / len(mas)
-
-    print(avg)
 
     return avg
 
@@ -71,6 +78,26 @@ def quantile(mas, deviation, avg):
     return temp / n / deviation
 
 
+def gross_exclusion(mas, avg, deviation, gt):
+    g1 = fabs(max(mas) - avg) / deviation
+    g2 = abs(avg - min(mas)) / deviation
+
+    while g1 > gt or g2 > gt:
+        if g1 > gt:
+            mas.remove(max(mas))
+
+        if g2 > gt:
+            mas.remove(min(mas))
+
+        avg = avg_data(mas)
+        deviation = deviation_offset(mas, avg)
+
+        g1 = fabs(max(mas) - avg) / deviation
+        g2 = abs(avg - min(mas)) / deviation
+
+    return mas
+
+
 if __name__ == '__main__':
     # FILENAME = input()
     FILENAME = 'G_v22_a.txt'
@@ -89,9 +116,12 @@ if __name__ == '__main__':
     quantile_curr = quantile(fileData, deviation_curr, avg_curr)
     print('Отношение квантиля d~: %s' % quantile_curr)
 
-    k = get_excel_table2('Table_B_2.xlsx')
-    print(k)
+    k = get_excel_gibs('Table_A_1.xlsx')
+    # print(k.iloc[18-3])
 
+    print(interp(49, k['n'].values, k['1p'].values))
+
+<<<<<<< HEAD
     k2 = get_excel_table1('Table_B_1.xlsx')
     print(k2)
     
@@ -103,3 +133,11 @@ if __name__ == '__main__':
     newmas=grub_iskluch(fileData,avg_curr,deviation_curr,3.060)
     print(newmas);
     
+=======
+    # print(fileData)
+    #
+    # gross_exclusion(mas=fileData, avg=avg_curr, deviation=deviation_curr,
+    #                 gt=get_excel_gibs('Table_A_1.xlsx').iloc[len(fileData)-3][1])
+    #
+    # print(fileData)
+>>>>>>> fa54f70b6c9b96c170861d377d00b32fbf0f623c

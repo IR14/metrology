@@ -46,6 +46,20 @@ def deviation_offset(mas, avg):
 
     return sqrt(temp / n)
 
+def srednekvadrat_avg(mas,S):
+    Sx=S/sqrt(len(mas))
+    return Sx
+
+def grub_iskluch(mas,avg,S,GT):
+    G1=abs(max(mas)-avg)/S
+    G2=abs(avg-min(mas))/S
+    while G1>GT or G2>GT:
+        if(G1>GT):
+            mas.remove(max(mas))
+        if(G2>GT):
+            mas.remove(min(mas))
+    return mas
+
 
 def quantile(mas, deviation, avg):
     n = len(mas)
@@ -80,3 +94,12 @@ if __name__ == '__main__':
 
     k2 = get_excel_table1('Table_B_1.xlsx')
     print(k2)
+    
+    #Среднее квадратическое отклонение среднего арифметического Sx
+    Sx=srednekvadrat_avg(fileData,deviation_curr)
+    print(Sx)
+    
+    #Исправленный массив
+    newmas=grub_iskluch(fileData,avg_curr,deviation_curr,3.060)
+    print(newmas);
+    

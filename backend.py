@@ -1,8 +1,13 @@
 from math import sqrt, fabs
 
-import pandas as pd
+from pandas import read_excel
+# import pandas as pd
 from numpy import interp
-
+# import numpy as np
+#
+# def normal_dist(x , mean , sd):
+#     prob_density = (np.pi*sd) * np.exp(-0.5*((x-mean)/sd)**2)
+#     return prob_density
 
 def get_file_data(filename):
     result = []
@@ -20,19 +25,19 @@ def get_file_data(filename):
 
 
 def get_excel_table1(filename):
-    return pd.read_excel(filename, names=['n', '1p', '5p', '99p', '95p'], skiprows=1)
+    return read_excel(filename, names=['n', '1p', '5p', '99p', '95p'], skiprows=1)
 
 
 def get_excel_table2(filename):
-    return pd.read_excel(filename, names=['n', 'm', '1p', '2p', '5p'], skiprows=1)
+    return read_excel(filename, names=['n', 'm', '1p', '2p', '5p'], skiprows=1)
 
 
 def get_excel_gibs(filename):
-    return pd.read_excel(filename, names=['n', '1p', '5p'], skiprows=1)
+    return read_excel(filename, names=['n', '1p', '5p'], skiprows=1)
 
 
 def get_excel_student(filename):
-    return pd.read_excel(filename, names=['n', '95p', '99p'], skiprows=1)
+    return read_excel(filename, names=['n', '95p', '99p'], skiprows=1)
 
 
 def avg_data(mas):
@@ -88,6 +93,7 @@ def gross_exclusion(mas, avg, deviation, gt):
         g1 = fabs(max(mas) - avg) / deviation
         g2 = abs(avg - min(mas)) / deviation
 
+    print(len(mas))
     return mas
 
 
@@ -141,58 +147,68 @@ def nonexclusive_system_error(mas_len, confidence_probability, mean_square_devia
     return delta
 
 
-if __name__ == '__main__':
-    # FILENAME = input()
-    FILENAME = 'G_v22_c.txt'
-    normal_distribution1 = False
-    normal_distribution2 = False
-
-    fileData = get_file_data(FILENAME)
-
-    # Среднее значение по выборке
-    avg_curr = avg_data(fileData)
-    print('Среднее значение по выборке: %s' % avg_curr)
-
-    # Смещенное среднее квадратическое отклонение
-    deviation_curr = mean_square_deviation(fileData, avg_curr, len(fileData))
-    print('Смещенное среднее квадратическое отклонение: %s' % deviation_curr)
-
-    # gross_exclusion(mas=fileData, avg=avg_curr, deviation=deviation_curr,
-    #                 gt=get_excel_gibs('Table_A_1.xlsx').iloc[len(fileData) - 3][1])
-
-    # Отношение квантиля d~
-    quantile_curr = quantile(fileData, deviation_curr, avg_curr)
-    print('Отношение квантиля d~: %s' % quantile_curr)
-
-    downsign = '5p'
-    upsign = '95p'
-    upper_laplace_quantile = '2p'
-
-    table1 = get_excel_table1('Table_B_1.xlsx')
-    downsign_curr = interp(len(fileData), table1['n'].values, table1[downsign].values)
-    upsign_curr = interp(len(fileData), table1['n'].values, table1[upsign].values)
-
-    table2 = get_excel_table2('Table_B_2_n.xlsx')
-    upper_laplace_quantile_curr = interp(len(fileData), table2['n'].values, table2[upper_laplace_quantile].values)
-    m_exception = interp(len(fileData), table2['n'].values, table2['m'].values)
-
-    exceed_curr = upper_laplace_quantile_curr * mean_square_deviation(fileData, avg_curr, len(fileData) - 1)
-    for i in fileData:
-        if i - avg_curr > exceed_curr:
-            print(i-avg_curr, ' k ', exceed_curr, ' m ', m_exception)
-            m_exception -= 1
-
-    print("%s < %s <= %s" % (upsign_curr, quantile_curr, downsign_curr))
-    if upsign_curr < quantile_curr <= downsign_curr:
-        normal_distribution1 = True
-
-    if m_exception >= 0:
-        normal_distribution2 = True
-
-    if normal_distribution1 and normal_distribution2:
-        print("Текущая выборка ПРИНАДЛЕЖИТ нормальному распределению по составному критерию!")
-    else:
-        print("Текущая выборка НЕ ПРИНАДЛЕЖИТ нормальному распределению по составному критерию!")
-
-    # gross_exclusion(mas=fileData, avg=avg_curr, deviation=deviation_curr,
-    #                 gt=get_excel_gibs('Table_A_1.xlsx').iloc[len(fileData)-3][1])
+# if __name__ == '__main__':
+#     # FILENAME = input()
+#     FILENAME = 'G_v22_a.txt'
+#     normal_distribution1 = False
+#     normal_distribution2 = False
+#
+#     fileData = get_file_data(FILENAME)
+#     # x = np.linspace(1, 50, 40)
+#     # print(len(x))
+#     # mean = np.mean(x)
+#     # sd = np.std(x)
+#     # pdf = normal_dist(x, mean, sd)
+#     # print(pdf)
+#     # fileData = pdf
+#
+#     # Среднее значение по выборке
+#     avg_curr = avg_data(fileData)
+#     print('Среднее значение по выборке: %s' % avg_curr)
+#
+#     # Смещенное среднее квадратическое отклонение
+#     deviation_curr = mean_square_deviation(fileData, avg_curr, len(fileData))
+#     print('Смещенное среднее квадратическое отклонение: %s' % deviation_curr)
+#
+#     tableA = get_excel_gibs('Table_A_1.xlsx')
+#     # print(tableA.iloc[len(fileData)-3][1])
+#     # interp(len(fileData), tableA['n'].values, tableA['1p'].values)
+#     print(len(fileData))
+#     # gross_exclusion(mas=fileData, avg=avg_curr, deviation=deviation_curr,
+#     #                 gt=interp(len(fileData), tableA['n'].values, tableA['1p'].values))
+#     # Отношение квантиля d~
+#     quantile_curr = quantile(fileData, deviation_curr, avg_curr)
+#     print('Отношение квантиля d~: %s' % quantile_curr)
+#
+#     downsign = '1p'
+#     upsign = '99p'
+#     upper_laplace_quantile = '2p'
+#
+#     table1 = get_excel_table1('Table_B_1.xlsx')
+#     downsign_curr = interp(len(fileData), table1['n'].values, table1[downsign].values)
+#     upsign_curr = interp(len(fileData), table1['n'].values, table1[upsign].values)
+#
+#     table2 = get_excel_table2('Table_B_2_n.xlsx')
+#     upper_laplace_quantile_curr = interp(len(fileData), table2['n'].values, table2[upper_laplace_quantile].values)
+#     m_exception = interp(len(fileData), table2['n'].values, table2['m'].values)
+#
+#     exceed_curr = upper_laplace_quantile_curr * mean_square_deviation(fileData, avg_curr, len(fileData) - 1)
+#     for i in fileData:
+#         if i - avg_curr > exceed_curr:
+#             print(i-avg_curr, ' k ', exceed_curr, ' m ', m_exception)
+#             m_exception -= 1
+#
+#     print("%s < %s <= %s" % (upsign_curr, quantile_curr, downsign_curr))
+#     if upsign_curr < quantile_curr <= downsign_curr:
+#         normal_distribution1 = True
+#
+#     if m_exception >= 0:
+#         normal_distribution2 = True
+#
+#     if normal_distribution1 and normal_distribution2:
+#         print("Текущая выборка ПРИНАДЛЕЖИТ нормальному распределению по составному критерию!")
+#     else:
+#         print("Текущая выборка НЕ ПРИНАДЛЕЖИТ нормальному распределению по составному критерию!")
+#
+#     # gross_exclusion(mas=fileData, avg=avg_curr, deviation=deviation_curr,
+#     #                 gt=get_excel_gibs('Table_A_1.xlsx').iloc[len(fileData)-3][1])

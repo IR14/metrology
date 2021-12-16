@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Text, Button, Label, Radiobutton, StringVar, Tk, INSERT
 from tkinter import filedialog as fd
 
 from backend import *

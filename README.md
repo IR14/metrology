@@ -1,9 +1,9 @@
 # metrology
 This is the repository for homework in metrology at the Higher School of Economics.
 
-<img src="https://render.githubusercontent.com/render/math?math=\Huge \Delta = K * S_\Sigma">
-<img src="https://render.githubusercontent.com/render/math?math=\Huge S_\Sigma = \sqrt {S_\Theta^2 %2B S_\tilde X^2}">
-<img src="https://render.githubusercontent.com/render/math?math=\Huge K = \frac {\varepsilon %2B \Theta_\Sigma(P)}{S_\tilde X %2b S_\Theta}">
+# description
+This is a report on how the program works and what it does:
+https://docs.google.com/document/d/1YdGDJHlXSrdXCVuxS2lqS43SGbcYmEx0Znjs1TOCl2w/edit#
 
 # Developers
 - [Ilya Mikhailov](https://github.com/IR14)

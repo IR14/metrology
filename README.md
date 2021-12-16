@@ -1,7 +1,7 @@
 # metrology
 This is the repository for homework in metrology at the Higher School of Economics.
 
-# description
+# Description
 This is a report on how the program works and what it does:
 https://docs.google.com/document/d/1YdGDJHlXSrdXCVuxS2lqS43SGbcYmEx0Znjs1TOCl2w/edit#
 

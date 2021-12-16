@@ -22,7 +22,6 @@ def get_result():
     deviation_curr = mean_square_deviation(fileData, avg_curr, len(fileData))
     # print('Смещенное среднее квадратическое отклонение: %s' % deviation_curr)
 
-    tableA = get_excel_gibs('Table_A_1.xlsx')
     # Отношение квантиля d~
     quantile_curr = quantile(fileData, deviation_curr, avg_curr)
     # print('Отношение квантиля d~: %s' % quantile_curr)
@@ -72,6 +71,7 @@ def read_file_2():
     filename = fd.askopenfilename(filetypes=(("text files", "*.txt"),))
 
     txt.config(state='normal')
+    txt.delete("1.0", "end")
     txt.insert('end', filename)
     txt.config(state='disabled')
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     rb1 = Radiobutton(text="95%", variable=var2, value=PERCENT95).grid(columnspan=1, row=4)
     rb2 = Radiobutton(text="99%", variable=var2, value=PERCENT99).grid(columnspan=2, row=4)
 
-    lbl4 = Label(window, text="Выберите верхний квантиль Лапласса:").grid(column=0, row=5, sticky='w')
+    lbl4 = Label(window, text="Выберите верхний квантиль Лапласа:").grid(column=0, row=5, sticky='w')
     var3 = StringVar()
     var3.set(PERCENT1)
     rb1 = Radiobutton(text="1%", variable=var3, value=PERCENT1).grid(column=0, row=6, columnspan=2)
